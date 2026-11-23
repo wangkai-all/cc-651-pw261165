@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>离线抓包接收台 · PCAP 重组与 HTTP 检查</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <div>
+        <h1>离线抓包接收台</h1>
+        <p class="subtitle">明文 HTTP/1.x · TCP 重组 · 报文级溯源（不解密 TLS）</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <label class="btn btn-primary" id="upload-label">
+        <input type="file" id="file-input" accept=".pcap,.pcapng,.cap" hidden>
+        上传 PCAP
+      </label>
+      <button class="btn" id="refresh-samples">刷新样例</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Left: capture + session list -->
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>可视化样例</h2>
+        <div id="sample-list" class="sample-list">
+          <p class="muted">加载中…</p>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>已加载抓包</h2>
+        <div id="capture-list" class="capture-list">
+          <p class="muted">尚未加载任何抓包。</p>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Main: session detail -->
+    <main class="main" id="main-pane">
+      <div class="empty-state" id="empty-state">
+        <h2>从左侧选择一个样例，或上传本地 PCAP</h2>
+        <p>支持持续连接、分块传输、gzip、序号回绕、乱序、重复与重叠冲突。</p>
+        <div class="feature-grid">
+          <div class="feature"><strong>五元组 + 实例</strong><span>重连拆成独立会话</span></div>
+          <div class="feature"><strong>协议定界</strong><span>CL / chunked / close</span></div>
+          <div class="feature"><strong>缺口不补</strong><span>缺失字节绝不拼接</span></div>
+          <div class="feature"><strong>双份冲突</strong><span>重叠双方都保留</span></div>
+        </div>
+      </div>
+
+      <div id="session-view" class="session-view" hidden>
+        <!-- Filled by app.js -->
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Packet detail modal -->
+<div class="modal-backdrop" id="modal-backdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" id="modal">
+    <button class="modal-close" id="modal-close" aria-label="关闭">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

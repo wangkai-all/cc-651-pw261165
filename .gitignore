@@ -12,6 +12,7 @@ __pycache__/
 target/
 dist/
 coverage/
+.pytest_cache/
 playwright-report/
 test-results/
 *.log
